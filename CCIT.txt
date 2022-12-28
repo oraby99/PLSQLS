@@ -1,0 +1,778 @@
+
+begin
+   dbms_output.put_line( 'heloooooo' );
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_hr varchar2(20):= 'welcome to my x';
+begin
+   dbms_output.put_line( v_hr );
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_hr varchar2(20);
+begin
+   v_hr:= 'welcome to my x';
+   dbms_output.put_line( v_hr );
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_name varchar2(20);
+begin
+   v_name:= 'oraby';
+   dbms_output.put_line('WELCOME to my bro ' ||  v_name || ' in pl/sql');
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_hr varchar2(20):= 'welcome to my x';
+begin
+   dbms_output.put_line( 'heloooooo' || ' ' || v_hr );
+end;
+----------------------------------------------------
+----------------------------------------------------
+select * from hr.employees;
+----------------------------------------------------
+----------------------------------------------------
+select SALARY from hr.employees;
+----------------------------------------------------
+----------------------------------------------------
+select SALARY from hr.employees where EMPLOYEE_ID = 100;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_salary varchar2(20);
+begin
+select SALARY into v_salary from hr.employees where EMPLOYEE_ID = 100;
+  dbms_output.put_line('my salary is : ' || v_salary );
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_salary hr.employees.salary%type;
+begin
+select SALARY into v_salary from hr.employees where EMPLOYEE_ID = 100;
+  dbms_output.put_line('my salary is : ' || v_salary );
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_salary hr.employees.salary%type;
+  v_bonus hr.employees.salary%type := 10;
+begin
+select SALARY into v_salary from hr.employees where EMPLOYEE_ID = 100;
+  dbms_output.put_line('my salary is : ' || v_salary );
+  v_salary := v_salary * v_bonus;
+  dbms_output.put_line('my salary after bonus is : ' || v_salary );
+end;
+----------------------------------------------------
+----------------------------------------------------
+select sysdate from dual;
+----------------------------------------------------
+----------------------------------------------------
+select last_day(sysdate) from dual;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_date date;
+begin 
+select last_day(sysdate) into v_date from dual;
+dbms_output.put_line('last date is : ' || v_date);
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_last_date date :=  last_day(sysdate);
+begin 
+dbms_output.put_line('the last date is : ' || v_last_date);
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_future_date date :=(add_months(sysdate , 5));
+  v_now_date date :=sysdate;
+begin 
+dbms_output.put_line(' date after 5 month is : ' || v_future_date);
+dbms_output.put_line(' the current date is : ' || v_now_date);
+dbms_output.put_line(months_between(v_now_date , v_now_date));
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_fname hr.employees.first_name%type;
+  v_lname hr.employees.last_name%type;
+begin 
+select first_name, last_name into v_fname, v_lname from hr.employees where employee_id = 100;
+dbms_output.put_line(' first name for employee 100 is : ' || v_fname);
+dbms_output.put_line(' last name for employee 100 is : ' || v_lname);
+end;
+----------------------------------------------------
+----------------------------------------------------
+select * from hr.employees
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_fname hr.employees.first_name%type;
+  v_lname hr.employees.last_name%type;
+  v_numbr hr.employees.EMPLOYEE_ID%type := 100;
+begin 
+select first_name, last_name into v_fname, v_lname from hr.employees where employee_id = v_numbr;
+dbms_output.put_line(' first name for employee ' || v_numbr || ' is : ' || v_fname);
+dbms_output.put_line(' last name for employee ' || v_numbr || ' is : ' || v_lname);
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+  v_fname hr.employees.first_name%type;
+  v_lname hr.employees.last_name%type;
+  v_numbr number not null := 100;
+begin 
+select first_name, last_name into v_fname, v_lname from hr.employees where employee_id = v_numbr;
+dbms_output.put_line(' first name for employee ' || v_numbr || ' is : ' || v_fname);
+dbms_output.put_line(' last name for employee ' || v_numbr || ' is : ' || v_lname);
+end;
+----------------------------------------------------
+----------------------------------------------------
+descripe hr.employees
+----------------------------------------------------
+----------------------------------------------------
+create table copy_employees as
+select * from hr.employees;
+----------------------------------------------------
+----------------------------------------------------
+select * from hr.employees;
+----------------------------------------------------
+----------------------------------------------------
+select * from copy_employees;
+----------------------------------------------------
+----------------------------------------------------
+begin
+INSERT INTO copy_employees
+(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,HIRE_DATE,SALARY,JOB_ID)
+VALUES
+(151 ,'ahmed', 'oraby', 'orabii','17-JUN-03' ,9000,'AD_PRES' );
+end;
+----------------------------------------------------
+----------------------------------------------------
+select * from copy_employees;
+----------------------------------------------------
+----------------------------------------------------
+declare 
+ v_mew_salary copy_employees.SALARY%type:= 3000;
+ begin
+UPDATE copy_employees
+SET SALARY = SALARY + v_mew_salary
+WHERE EMPLOYEE_ID = 100;
+end;
+----------------------------------------------------
+----------------------------------------------------
+select * from copy_employees;
+----------------------------------------------------
+----------------------------------------------------
+create table trial (id number(3) , name varchar2(20))
+----------------------------------------------------
+----------------------------------------------------
+begin
+INSERT INTO trial
+(id,name)
+VALUES
+(151 ,'ahmed');
+commit;
+end;
+----------------------------------------------------
+----------------------------------------------------
+begin
+INSERT INTO trial
+(id,name)
+VALUES
+(11 ,'ali');
+rollback;
+end;
+----------------------------------------------------
+----------------------------------------------------
+select * from trial;
+----------------------------------------------------
+----------------------------------------------------
+begin
+INSERT INTO trial
+(id,name)
+VALUES
+(11 ,'tr');
+savepoint sp1;
+INSERT INTO trial
+(id,name)
+VALUES
+(22 ,'mo');
+savepoint sp2;
+INSERT INTO trial
+(id,name)
+VALUES
+(33 ,'mgz');
+rollback  to sp1;
+end;
+----------------------------------------------------
+----------------------------------------------------
+select * from trial;
+----------------------------------------------------
+-------------------IF-------------------------------
+DECLARE
+   var number(3) := 50;
+BEGIN
+   IF (var = 10) THEN
+      dbms_output.put_line('Value of var is 10');
+   ELSIF (var = 20) THEN
+      dbms_output.put_line('Value of var is 20');
+   ELSIF (var = 30) THEN
+      dbms_output.put_line('Value of var is 30');
+   ELSE
+       dbms_output.put_line('None of the above condition is true.');
+   END IF;
+   dbms_output.put_line('Exact value of var is: '|| var); 
+END;
+----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3) := 50;
+ begin
+if (v_num = 10) then
+      dbms_output.put_line('Value of var is 10');
+ELSIF (v_num = 20) then
+      dbms_output.put_line('Value of var is 20');
+ELSIF (v_num = 30) then
+      dbms_output.put_line('Value of var is 30');
+else
+       dbms_output.put_line('None of the above condition is true.');
+end if;
+   dbms_output.put_line('Exact value of var is: '|| v_num); 
+ end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3) := 10;
+ v_name varchar2(20) := 'ali';
+ begin
+if (v_num = 10 and v_name = 'ali') then
+      dbms_output.put_line('Value of var is 10 and the name is : ' || v_name);
+ELSIF (v_num = 20) then
+      dbms_output.put_line('Value of var is 20');
+ELSIF (v_num = 30) then
+      dbms_output.put_line('Value of var is 30');
+else
+       dbms_output.put_line('None of the above condition is true.');
+end if;
+   dbms_output.put_line('Exact value of var is: ' || v_num || ' and the name is : ' || v_name); 
+ end;
+ ----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3) := 10;
+ v_name varchar2(20) := 'ali';
+ begin
+if (v_num = 10 or v_name = 'ali') then
+      dbms_output.put_line('Value of var is 10 and the name is : ' || v_name);
+ELSIF (v_num = 20) then
+      dbms_output.put_line('Value of var is 20');
+ELSIF (v_num = 30) then
+      dbms_output.put_line('Value of var is 30');
+else
+       dbms_output.put_line('None of the above condition is true.');
+end if;
+   dbms_output.put_line('Exact value of var is: ' || v_num || ' and the name is : ' || v_name); 
+ end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3):= 12 ;
+ begin
+if (v_num = 10 ) then
+      dbms_output.put_line('Value of var is 10 ');
+else
+       dbms_output.put_line('None of the above condition is true.');
+end if;
+   dbms_output.put_line('Exact value of var is: ' || v_num ); 
+ end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3) :=5 ;
+ begin
+case v_num
+when 5 then
+      dbms_output.put_line('Value of var is 5 ');
+when 10 then
+      dbms_output.put_line('Value of var is 10 ');
+else
+     dbms_output.put_line('None of the above condition is true.');
+end case;
+   dbms_output.put_line('Exact value of var is: ' || v_num ); 
+ end; 
+----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3) :=15 ;
+ begin
+case 
+when v_num = 5 then
+      dbms_output.put_line('Value of var is 5 ');
+when v_num > 10 then
+      dbms_output.put_line('Value of var is 10 ');
+else
+     dbms_output.put_line('None of the above condition is true.');
+end case;
+   dbms_output.put_line('Exact value of var is: ' || v_num ); 
+ end;  
+----------------------------------------------------
+----------------------------------------------------
+declare
+ v_num number(3) :=8 ;
+ begin
+case 
+when v_num between 5 and 10 then
+      dbms_output.put_line('Value of var is 5 ');
+when v_num > 10 then
+      dbms_output.put_line('Value of var is 10 ');
+else
+     dbms_output.put_line('None of the above condition is true.');
+end case;
+   dbms_output.put_line('Exact value of var is: ' || v_num ); 
+ end;   
+----------------------------------------------------
+----------------------------------------------------
+ declare
+ v_mark number(3) :=30 ;
+ v_grade varchar2(1) ;
+
+begin
+v_grade := case 
+when v_mark between 20 and 40 then 'C'
+when v_mark between 40 and 60 then 'B'
+when v_mark between 60 and 80 then 'A'
+else
+     'F'
+end ;
+   dbms_output.put_line('Exact value of grade is: ' || v_grade ); 
+ end;  
+----------------------------------------------------
+----------------------------------------------------
+select first_name , last_name , salary ,
+case when salary between 1500 and 24000 then 'HIGH salary'
+     when salary between 8000 and 14999 then 'MEDIUM salary'
+     when salary between 2000 and 7999  then 'LOW salary'
+end as salary_category
+from hr.employees;
+----------------------------------------------------
+----------------------------------------------------
+declare
+begin
+ FOR var IN 1..10
+ loop
+ dbms_output.put_line(var);
+ end loop;
+end;
+----------------------------------------------------
+----------------------------------------------------
+ declare
+ v_counter number(5):=1;
+begin
+ loop
+ dbms_output.put_line( 'YOU COUNTER IS : ' || v_counter);
+ v_counter := v_counter +1;
+  exit when v_counter > 10;
+ end loop;
+end;  
+----------------------------------------------------
+----------------------------------------------------
+create table copy_location
+as
+select * from hr.locations;
+select * from copy_location;
+----------------------------------------------------
+----------------------------------------------------
+declare
+v_last_location copy_location.LOCATION_ID%type;
+v_counter number(1) := 1;
+begin
+select max(LOCATION_ID) into v_last_location from copy_location where COUNTRY_ID = 'IT' ;
+loop
+insert into copy_location(LOCATION_ID,CITY ,COUNTRY_ID )
+values ((v_last_location + v_counter)  ,'Roma' ,'IT' );
+v_counter := v_counter +1;
+exit when v_counter >3;
+end loop;
+end]
+
+----------------------------------------------------
+----------------------------------------------------
+declare
+v_last_location copy_location.LOCATION_ID%type;
+v_counter number(1) := 1;
+begin
+select max(LOCATION_ID) into v_last_location from copy_location where COUNTRY_ID = 'IT' ;
+while  v_counter =< 3
+loop
+insert into copy_location(LOCATION_ID,CITY ,COUNTRY_ID )
+values ((v_last_location + v_counter)  ,'Roma' ,'IT' );
+v_counter := v_counter +1;
+end loop;
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+v_last_location copy_location.LOCATION_ID%type;
+v_counter number(1) := 1;
+begin
+select max(LOCATION_ID) into v_last_location from copy_location where COUNTRY_ID = 'IT' ;
+for v_counter in 1..3
+loop
+insert into copy_location(LOCATION_ID,CITY ,COUNTRY_ID )
+values ((v_last_location + v_counter)  ,'Roma' ,'IT' );
+end loop;
+end;
+----------------------------------------------------
+----------------------------------------------------
+DECLARE  
+  num NUMBER := 1;  
+BEGIN  
+  WHILE num <= 10
+  LOOP    
+    DBMS_OUTPUT.PUT_LINE(num);   
+    num := num+1;
+  END LOOP;  
+END;
+----------------------------------------------------
+----------------------------------------------------
+declare
+begin
+ FOR var IN 1..10
+ loop
+ dbms_output.put_line(var);
+ end loop;
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare
+begin
+ FOR var IN reverse 1..10
+ loop
+ dbms_output.put_line(var);
+ end loop;
+end;
+----------------------------------------------------
+----------------------------------------------------
+DECLARE  
+  num NUMBER(2) := 1;  
+BEGIN  
+  LOOP    
+    DBMS_OUTPUT.PUT_LINE(num);   
+    num := num+1;
+    exit when num > 10;
+  END LOOP;  
+END;
+----------------------------------------------------
+------------Implicit cursor-------------------------
+create table copy_employees as 
+select * from hr.employees
+select * from copy_employees
+
+DECLARE  var_rows number(20);
+BEGIN
+  UPDATE copy_employees 
+  SET salary = salary + 100;
+  IF SQL%NOTFOUND THEN
+    dbms_output.put_line('No record updated.');
+  ELSIF SQL%FOUND THEN
+    var_rows := SQL%ROWCOUNT;
+    dbms_output.put_line(var_rows || ' records are updated.');
+  END IF; 
+END;
+----------------------------------------------------
+------------explicit cursor-------------------------
+DECLARE
+   s_rollNo students.rollNo%type;
+   s_name students.name%type;
+   s_address students.address%type;
+   CURSOR cur_students is
+      SELECT rollNo, name, address FROM students;
+BEGIN
+   OPEN cur_students;
+   LOOP
+      FETCH cur_students into s_rollNo, s_name, s_address;
+      EXIT WHEN cur_students%notfound;
+      dbms_output.put_line(s_rollNo || ' ' || s_name || ' ' || s_address);
+   END LOOP;
+   CLOSE cur_students;
+END;
+----------------------------------------------------
+----------------------------------------------------
+declare 
+   v_empid hr.employees.EMPLOYEE_ID%type;
+   v_fname hr.employees.FIRST_NAME%type;
+   v_slary hr.employees.SALARY%type;
+CURSOR cur_employee is
+select EMPLOYEE_ID , FIRST_NAME, SALARY  from hr.employees where department_id   = 50;
+begin
+OPEN cur_employee;
+  LOOP
+      FETCH cur_employee into v_empid, v_fname, v_slary;
+      EXIT WHEN cur_employee%notfound;
+      dbms_output.put_line('ID IS : ' || v_empid || ' ' || ' NAME IS : ' || v_fname || ' AND  SALARY IS :  ' || '' || v_slary);
+   END LOOP;
+   CLOSE cur_employee;
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare 
+CURSOR cur_employee is
+select EMPLOYEE_ID , FIRST_NAME, SALARY  from hr.employees where department_id   = 50;
+v_emprecord cur_employee%rowtype;
+begin
+OPEN cur_employee;
+  LOOP
+      FETCH cur_employee into v_emprecord;
+      EXIT WHEN cur_employee%notfound;
+      dbms_output.put_line('ID IS : '  || ' ' || v_emprecord.EMPLOYEE_ID || ',  NAME IS : '  || v_emprecord.FIRST_NAME ||',   SALARY IS :  ' || ''|| v_emprecord.SALARY );
+   END LOOP;
+   CLOSE cur_employee;
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare 
+CURSOR cur_employee is
+select EMPLOYEE_ID , FIRST_NAME, SALARY  from hr.employees where department_id   = 50;
+begin
+for   v_emprecord in cur_employee
+  LOOP
+      dbms_output.put_line('ID  : '  || ' ' || v_emprecord.EMPLOYEE_ID || ',  NAME IS : '  || v_emprecord.FIRST_NAME ||',   SALARY IS :  ' || ''|| v_emprecord.SALARY );
+   END LOOP;
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare 
+CURSOR cur_employee is
+select EMPLOYEE_ID , FIRST_NAME, SALARY  from hr.employees where department_id   = 50;
+begin
+for   v_emprecord in cur_employee
+  LOOP
+  exit when cur_employee%rowcount > 5;
+      dbms_output.put_line('ID  : '  || ' ' || v_emprecord.EMPLOYEE_ID || ',  NAME IS : '  || v_emprecord.FIRST_NAME ||',   SALARY IS :  ' || ''|| v_emprecord.SALARY );
+   END LOOP;
+end;
+----------------------------------------------------
+----------------------------------------------------
+begin
+for v_emprecord in (select EMPLOYEE_ID , FIRST_NAME, SALARY  from hr.employees where department_id = 50)
+  LOOP
+      dbms_output.put_line('ID  : '  || ' ' || v_emprecord.EMPLOYEE_ID || ',  NAME IS : '  || v_emprecord.FIRST_NAME ||',   SALARY IS :  ' || ''|| v_emprecord.SALARY );
+   END LOOP;
+end;
+----------------------------------------------------
+----------------------------------------------------
+declare 
+CURSOR cur_employee(dep_id number)is
+select EMPLOYEE_ID , FIRST_NAME, SALARY  from hr.employees where department_id   =dep_id;
+v_emprecord cur_employee%rowtype;
+begin
+OPEN cur_employee(90);
+  LOOP
+      FETCH cur_employee into v_emprecord;
+      EXIT WHEN cur_employee%notfound;
+      dbms_output.put_line('ID IS : '  || ' ' || v_emprecord.EMPLOYEE_ID || ',  NAME IS : '  || v_emprecord.FIRST_NAME ||',   SALARY IS :  ' || ''|| v_emprecord.SALARY );
+   END LOOP;
+   CLOSE cur_employee;
+end;
+----------------------------------------------------
+---------------EXCEPTION---------------------------
+DECLARE
+   v_fname hr.employees.FIRST_NAME%type;
+BEGIN
+   SELECT FIRST_NAME into v_fname FROM hr.employees  WHERE DEPARTMENT_ID = 90;
+   dbms_output.put_line(  v_fname );
+   EXCEPTION
+   WHEN TOO_MANY_ROWS THEN
+      dbms_output.put_line('MORE THAN EMPLOYEES!');
+END;
+----------------------------------------------------
+----------------------------------------------------
+DECLARE
+   v_fname hr.employees.FIRST_NAME%type;
+BEGIN
+   SELECT FIRST_NAME into v_fname FROM hr.employees  WHERE EMPLOYEE_ID = 90;
+   dbms_output.put_line(  v_fname );
+   EXCEPTION
+   WHEN TOO_MANY_ROWS THEN
+      dbms_output.put_line('MORE THAN EMPLOYEES!');
+   WHEN NO_DATA_FOUND THEN
+      dbms_output.put_line('NO_DATA_FOUND!');
+   WHEN others THEN
+      dbms_output.put_line('Error!');
+END;
+----------------------------------------------------
+----------------------------------------------------
+DECLARE
+   v_fname hr.employees.FIRST_NAME%type;
+BEGIN
+   SELECT FIRST_NAME into v_fname FROM hr.employees  WHERE DEPARTMENT_ID = 90;
+   dbms_output.put_line(  v_fname );
+   EXCEPTION
+   WHEN TOO_MANY_ROWS THEN
+      dbms_output.put_line('MORE THAN EMPLOYEES!');
+   WHEN others THEN
+      dbms_output.put_line('Error!');
+END;
+----------------------------------------------------
+----------------------------------------------------
+create table copy_employee as 
+select * from hr.employees;
+select * from copy_employee;
+----------------------------------------------------
+----------------------------------------------------
+DECLARE
+e_insert_excep EXCEPTION;
+PRAGMA EXCEPTION_INIT(e_insert_excep, -01400);
+BEGIN
+INSERT INTO copy_employee
+(EMPLOYEE_ID,FIRST_NAME, DEPARTMENT_ID)
+VALUES (280,'tets', NULL);
+EXCEPTION
+WHEN e_insert_excep
+THEN
+DBMS_OUTPUT.PUT_LINE('INSERT FAILED');
+END;
+----------------------------------------------------
+----------------------------------------------------
+create table copy_departments as 
+select * from hr.departments;
+select * from copy_departments;
+----------------------------------------------------
+----------------------------------------------------
+DECLARE
+e_invalid_department EXCEPTION;
+v_name VARCHAR2(20):='Accounting';
+v_deptno NUMBER := 20;
+BEGIN
+UPDATE copy_departments
+SET department_name = v_name
+WHERE department_id = v_deptno;
+IF SQL%NOTFOUND THEN
+RAISE e_invalid_department;
+END IF;
+EXCEPTION
+WHEN e_invalid_department
+THEN DBMS_OUTPUT.PUT_LINE('No such department id.');
+END;
+----------------------------------------------------
+----------------------------------------------------
+create table copy_department as 
+select * from hr.departments;
+select * from copy_department;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE PROCEDURE add_dept IS
+v_dept_id copy_department.department_id%TYPE;
+v_dept_name copy_department.department_name%TYPE;
+BEGIN
+v_dept_id := 280;
+v_dept_name := 'ST-Curriculum';
+INSERT INTO copy_department(department_id, department_name)
+VALUES(v_dept_id, v_dept_name);
+DBMS_OUTPUT.PUT_LINE('Inserted '|| SQL%ROWCOUNT || ' row.');
+END;
+BEGIN 
+add_dept;
+END;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE PROCEDURE hello_world
+AS
+BEGIN
+   dbms_output.put_line('Hello World!');
+END;
+BEGIN 
+hello_world;
+END;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE PROCEDURE add_student(rollNo IN NUMBER, name IN VARCHAR2)
+IS 
+BEGIN 
+    insert into students values(rollNo,name);
+END;
+BEGIN 
+add_2_nubers;
+END;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE PROCEDURE add_2_nubers
+IS 
+v_num1 number(5) := 10;
+v_num2 number(5) := 10;
+BEGIN 
+   dbms_output.put_line('SOME OF TWO NUMBERS ARE : ' || (v_num1   +  v_num2) );
+END;
+BEGIN 
+add_2_nubers;
+END;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE PROCEDURE add_2_nubers(v_num1 number , v_num2 number)
+IS 
+BEGIN 
+   dbms_output.put_line('SOME OF TWO NUMBERS ARE : ' || (v_num1   +  v_num2) );
+END;
+BEGIN 
+add_2_nubers(1,1);
+END;
+----------------------------------------------------
+---------------functions----------------------------
+CREATE OR REPLACE function sum_2_nubers return number
+IS 
+v_num1 number(5) := 10;
+v_num2 number(5) := 10;
+BEGIN 
+   return v_num1   +  v_num2 ;
+END;
+BEGIN 
+   dbms_output.put_line(sum_2_nubers);
+END;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE function sum_2_nubers return number
+IS 
+v_num1 number(5) := 10;
+v_num2 number(5) := 10;
+BEGIN 
+   return v_num1   +  v_num2 ;
+END;
+select sum_2_nubers from dual;
+----------------------------------------------------
+------------PACKAGE--------------------------------
+CREATE PACKAGE package_name AS
+   PROCEDURE procedure_name;
+END cust_sal;
+----------------------------------------------------
+----------------------------------------------------
+CREATE PACKAGE emp_sal AS
+   PROCEDURE find_sal(e_id hr.employees.EMPLOYEE_ID%type);
+END emp_sal;
+----------------------------------------------------
+----------------------------------------------------
+CREATE OR REPLACE PACKAGE BODY emp_sal AS
+   PROCEDURE find_sal(e_id hr.employees.EMPLOYEE_ID%TYPE) IS
+   e_sal hr.employees.salary%TYPE;
+   BEGIN
+      SELECT salary INTO e_sal
+      FROM hr.employees
+      WHERE EMPLOYEE_ID = e_id;
+      dbms_output.put_line('Salary: '|| e_sal);
+   END find_sal;
+END emp_sal;
+----------------------------------------------------
+----------------------------------------------------
+begin
+dbms_output.put_line (emp_sal.find_sal(100);
+
+dbms_output.put_line (emp_sal.find_sal(100));
+end;
